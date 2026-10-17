@@ -6,7 +6,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'status', 'deadline', 'created_at')
     search_fields = ('title', 'description')
     list_filter = ('status', 'categories')
-    ordering = ('deadline',)
+    ordering = ('-created_at',)
 
 
 @admin.register(SubTask)
@@ -14,7 +14,7 @@ class SubTaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'task', 'status', 'deadline', 'created_at')
     search_fields = ('title', 'description')
     list_filter = ('status', 'task')
-    ordering = ('deadline',)
+    ordering = ('-created_at',)
 
 
 @admin.register(Category)
