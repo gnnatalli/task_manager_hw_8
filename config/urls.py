@@ -6,6 +6,8 @@ from apps.tasks.views import (
     TaskCreateView,
     TaskListView,
     TaskDetailView,
+    SubTaskListCreateView,
+    SubTaskDetailUpdateDeleteView,
     task_statistics,
 )
 
@@ -23,4 +25,18 @@ urlpatterns = [
 
     # Статистика задач
     path('api/tasks/statistics/', task_statistics, name='task-statistics'),
+
+    # Получение списка и создание подзадач
+    path(
+        'api/subtasks/',
+        SubTaskListCreateView.as_view(),
+        name='subtask-list-create'
+    ),
+
+    # Получение, обновление и удаление подзадачи по ID
+    path(
+        'api/subtasks/<int:pk>/',
+        SubTaskDetailUpdateDeleteView.as_view(),
+        name='subtask-detail'
+    ),
 ]
