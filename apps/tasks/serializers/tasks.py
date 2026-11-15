@@ -9,7 +9,7 @@ class TaskSerializer(ModelSerializer):
     # Преобразует модель Task в JSON и проверяет входящие данные.
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'status', 'deadline']
+        fields = ['id', 'title', 'description', 'status', 'deadline', 'created_at']
 
 # ModelSerializer автоматически создаёт поля на основе модели.
 # model = Task указывает, с какой моделью работаем.
