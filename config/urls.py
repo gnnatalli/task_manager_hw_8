@@ -1,19 +1,31 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
-from apps.tasks.views import (
+from rest_framework.routers import DefaultRouter
+
+from apps.tasks.views.tasks import (
     TaskListCreateView,
     TaskDetailView,
+)
+from apps.tasks.views.subtasks import (
     SubTaskListCreateView,
     SubTaskDetailUpdateDeleteView,
-    task_statistics,
 )
+from apps.tasks.views.statistics import task_statistics
+from apps.tasks.views.categories import CategoryViewSet
+
+# Роутер для CategoryViewSet
+# DefaultRouter() создаёт специальный роутер (избавляет нас от необходимости вручную прописывать CRUD-маршруты.)
+# register() регистрирует наш CategoryViewSet.
+router = DefaultRouter()
+router.register(r'categories', CategoryViewSet, basename='category')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Список и создание задач
+    # Tasks
     path(
         'api/tasks/',
         TaskListCreateView.as_view(),
@@ -35,6 +47,7 @@ urlpatterns = [
     ),
 
     # Список и создание подзадач
+    # SubTasks
     path(
         'api/subtasks/',
         SubTaskListCreateView.as_view(),
@@ -47,4 +60,13 @@ urlpatterns = [
         SubTaskDetailUpdateDeleteView.as_view(),
         name='subtask-detail'
     ),
+
+    # Categories
+    path('api/', include(router.urls)),
 ]
+
+# include() — подключает набор маршрутов.
+# include(router.urls) - подключи все URL, которые создал роутер.
+
+# path() — задаёт URL.
+# router.urls — маршруты, автоматически созданные роутером.

@@ -11,4 +11,5 @@ from .subtasks import (
 
 from .categories import (
     CategoryCreateSerializer,
+    CategorySerializer
 )
