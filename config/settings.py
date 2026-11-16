@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.tasks.middleware.HTTPRequestLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -144,4 +145,69 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
+
+    'DEFAULT_PAGINATION_CLASS': 'apps.tasks.pagination.CustomCursorPagination',
+    'PAGE_SIZE': 6,
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} [{levelname}] {name} {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        # Вывод логов в консоль
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+
+        # Запись HTTP-логов в файл
+        'http_file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'http_logs.log',
+            'formatter': 'verbose',
+        },
+
+        # Запись SQL-запросов в файл
+        'db_file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'db_logs.log',
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+        'http': {
+            'handlers': ['http_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Работа сервера — консоль
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+
+        # HTTP-запросы и ошибки
+        'django.request': {
+            'handlers': ['http_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+
+        # SQL-запросы к базе данных
+        'django.db.backends': {
+            'handlers': ['db_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
 }

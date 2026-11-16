@@ -1,5 +1,4 @@
 from rest_framework import generics
-from rest_framework.pagination import PageNumberPagination
 
 from apps.tasks.models import SubTask
 from apps.tasks.serializers import (
@@ -7,14 +6,14 @@ from apps.tasks.serializers import (
     SubTaskCreateSerializer,
 )
 
-# Пагинация: по 5 подзадач на страницу
-class SubTaskPagination(PageNumberPagination):
-    page_size = 5
+# # Пагинация: по 5 подзадач на страницу
+# class SubTaskPagination(PageNumberPagination):
+#     page_size = 5
 
 # 1. Список и создание подзадач
 class SubTaskListCreateView(generics.ListCreateAPIView):
     queryset = SubTask.objects.all()
-    pagination_class = SubTaskPagination
+    #pagination_class = SubTaskPagination
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
