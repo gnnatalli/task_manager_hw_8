@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from apps.tasks.views.tasks import (
     TaskListCreateView,
@@ -63,6 +64,8 @@ urlpatterns = [
 
     # Categories
     path('api/', include(router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # include() — подключает набор маршрутов.
@@ -70,3 +73,6 @@ urlpatterns = [
 
 # path() — задаёт URL.
 # router.urls — маршруты, автоматически созданные роутером.
+
+# POST /api/token/ — проверяет логин и пароль пользователя и возвращает Access и Refresh Token.
+# POST /api/token/refresh/ — принимает Refresh Token и выдаёт новый Access Token.

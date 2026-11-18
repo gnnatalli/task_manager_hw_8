@@ -140,6 +140,15 @@ MAILERS = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    # JWTAuthentication — Django будет проверять JWT-токен пользователя.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    # IsAuthenticated — API будет доступно только авторизованным пользователям.
+
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
@@ -147,7 +156,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'apps.tasks.pagination.CustomCursorPagination',
-    'PAGE_SIZE': 6,
+    'PAGE_SIZE': 5,
 }
 
 LOGGING = {
