@@ -5,6 +5,7 @@ from apps.tasks.serializers import (
     SubTaskSerializer,
     SubTaskCreateSerializer,
 )
+from apps.tasks.permissions import IsOwnerOrReadOnly
 
 # # Пагинация: по 5 подзадач на страницу
 # class SubTaskPagination(PageNumberPagination):
@@ -20,9 +21,12 @@ class SubTaskListCreateView(generics.ListCreateAPIView):
             return SubTaskCreateSerializer
         return SubTaskSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     # Фильтрация по названию задачи
     def get_queryset(self):
-        queryset = SubTask.objects.all()
+        queryset = SubTask.objects.filter(owner=self.request.user)
 
         task_title = self.request.query_params.get('task_title')
 
@@ -49,6 +53,7 @@ class SubTaskDetailUpdateDeleteView(
     generics.RetrieveUpdateDestroyAPIView
 ):
     queryset = SubTask.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:

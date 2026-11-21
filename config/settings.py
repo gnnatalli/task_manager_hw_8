@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_filters',
     # Django REST Framework
     'rest_framework',
+    'rest_framework_simplejwt',
+    'drf_yasg',
     # Приложение задач
     'apps.tasks.apps.TasksConfig'
 ]

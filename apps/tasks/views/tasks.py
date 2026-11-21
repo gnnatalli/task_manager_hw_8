@@ -6,7 +6,7 @@ from apps.tasks.serializers import (
     TaskDetailSerializer,
     TaskCreateSerializer
 )
-
+from apps.tasks.permissions import IsOwnerOrReadOnly
 
 # 1. Список и создание задач
 class TaskListCreateView(generics.ListCreateAPIView):
@@ -18,9 +18,16 @@ class TaskListCreateView(generics.ListCreateAPIView):
             return TaskCreateSerializer
         return TaskSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        # self.request.user — текущий авторизованный пользователь.
+        # serializer.save() — сохраняет новую задачу.
+        # owner=self.request.user — записывает этого пользователя владельцем задачи.
+
+
     # Фильтрация задач по дню недели
     def get_queryset(self):
-        queryset = Task.objects.all()
+        queryset = Task.objects.filter(owner=self.request.user)
         weekday = self.request.query_params.get('weekday')
 
         if weekday:
@@ -57,8 +64,19 @@ class TaskListCreateView(generics.ListCreateAPIView):
 # 2. Просмотр, изменение и удаление задачи
 class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
             return TaskCreateSerializer
         return TaskDetailSerializer
+
+# 3. Получение задач текущего пользователя
+class MyTaskListView(generics.ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        return Task.objects.filter(owner=self.request.user)
+    # self.request.user — пользователь, который отправил запрос.
+    # filter(owner=self.request.user) — выбирает только его задачи.
+    # ListAPIView — предоставляет GET-запрос для получения списка.

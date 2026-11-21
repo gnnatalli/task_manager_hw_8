@@ -8,6 +8,7 @@ class SubTaskSerializer(ModelSerializer):
     class Meta:
         model = SubTask
         fields = '__all__'
+        read_only_fields = ['owner']
 
 
 class SubTaskCreateSerializer(ModelSerializer):
@@ -16,3 +17,4 @@ class SubTaskCreateSerializer(ModelSerializer):
     class Meta:
         model = SubTask
         fields = '__all__'
+        read_only_fields = ['owner']

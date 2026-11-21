@@ -25,6 +25,8 @@ class SubTask(models.Model):
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
 
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='subtasks')
+
     # Связь ForeignKey: много подзадач относятся к одной задаче
     task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='subtasks')
     status = models.CharField(

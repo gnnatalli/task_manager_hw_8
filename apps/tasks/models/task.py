@@ -24,6 +24,8 @@ class Task(models.Model):
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField()
 
+    owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='tasks')
+
     # Связь ManyToMany: одна задача может иметь несколько категорий
     categories = models.ManyToManyField('Category', related_name='tasks')
     status = models.CharField(
