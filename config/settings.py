@@ -141,15 +141,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'admin@example.com'
+
+LIBRARIANS_EMAILS = ['librarian_1@example.com', 'librarian_2@example.com']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
